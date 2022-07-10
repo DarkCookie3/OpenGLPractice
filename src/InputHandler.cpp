@@ -9,9 +9,6 @@ void InputHandler::ProcessInput(GLFWwindow* window, float currentTime)
 	deltaTime = currentTime - lastFrame;
 	lastFrame = currentTime;
 
-	if(deltaTime >= 0.01f)
-	std::cout << deltaTime << std::endl;
-
 	bool shifted = false;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -38,6 +35,12 @@ void InputHandler::ProcessInput(GLFWwindow* window, float currentTime)
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 		camera.MoveVertically(deltaTime, true, shifted);
+
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		camera.RotateByRoll(-deltaTime * 100.0f);
+
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		camera.RotateByRoll(deltaTime * 100.0f);
 }
 
 void InputHandler::mouse_callback(double xpos, double ypos)
@@ -55,7 +58,7 @@ void InputHandler::mouse_callback(double xpos, double ypos)
 	float yoffset = lastY - ypos;
 	lastX = xpos;
 	lastY = ypos;
-	xoffset *= HorizontalSensetivity*float(camera.rollReversed);
+	xoffset *= HorizontalSensetivity;
 	yoffset *= VerticalSensetivity;
 	camera.RotateByYaw(xoffset);
 	camera.RotateByPitch(yoffset);

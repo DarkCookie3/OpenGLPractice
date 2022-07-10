@@ -3,8 +3,11 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include "iostream"
+
 Camera::Camera(glm::vec3 pos, glm::vec3 look)
 {	
+	//stub constructor, fix it
 	position = pos;
 	ForwardMoveNormalized = glm::vec3(0.0f, 0.0f, 0.0f);
 	LookNormalized = glm::normalize(look);
@@ -13,63 +16,51 @@ Camera::Camera(glm::vec3 pos, glm::vec3 look)
 	pitch = 0.0f;
 	yaw = -90.0f;
 	roll = 0.0f;
-
-	float clampedAngle = fmodf(pitch, 360.0f);
-	rollReversed = (clampedAngle >= 90.0f && clampedAngle <= 270.0f) || (clampedAngle <= -90.0f && clampedAngle >= -270.0f) ? true : false;
 }
 
 void Camera::RotateByYaw(float angleDelta)
 {
 	yaw += angleDelta;
-	LookNormalized.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	LookNormalized.y = sin(glm::radians(pitch));
-	LookNormalized.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	LookNormalized = glm::normalize(LookNormalized);
-	RightNormalized = glm::normalize(glm::cross(LookNormalized, glm::vec3(0.0f, 1.0f, 0.0f)));
-	CameraUpNormalized = glm::cross(RightNormalized, LookNormalized);
+	
+	glm::mat4 yawT(1.0f);
+
+	yawT = glm::rotate(yawT, glm::radians(-angleDelta), CameraUpNormalized);
+
+	LookNormalized = glm::vec3(yawT * glm::vec4(LookNormalized, 1.0));
+	RightNormalized = glm::vec3(yawT * glm::vec4(RightNormalized, 1.0));
+	CameraUpNormalized = glm::vec3(yawT * glm::vec4(CameraUpNormalized, 1.0));
 }
 
 void Camera::RotateByPitch(float angleDelta)
 {
 	pitch += angleDelta;
 	float clampedAngle = fmodf(pitch, 360.0f);
-	if (!rollReversed)
-	{
-		if ((clampedAngle >= 90.0f && clampedAngle <= 270.0f) || (clampedAngle <= -90.0f && clampedAngle >= -270.0f))
-		{
-			roll *= -1;
-			rollReversed = !rollReversed;
-		}
-	}
-	else
-	{
-		if (!(clampedAngle >= 90.0f && clampedAngle <= 270.0f) && !(clampedAngle <= -90.0f && clampedAngle >= -270.0f))
-		{
-			roll *= -1;
-			rollReversed = !rollReversed;
-		}
-	}
 	
-	LookNormalized.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	LookNormalized.y = sin(glm::radians(pitch));
-	LookNormalized.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	LookNormalized = glm::normalize(LookNormalized);
-	RightNormalized = glm::normalize(glm::cross(LookNormalized, glm::vec3(0.0f, 1.0f, 0.0f)));
-	CameraUpNormalized = glm::cross(RightNormalized, LookNormalized);
+	glm::mat4 pitchT(1.0f);
+
+	pitchT = glm::rotate(pitchT, glm::radians(angleDelta), RightNormalized);
+
+	LookNormalized = glm::vec3(pitchT * glm::vec4(LookNormalized, 1.0));
+	RightNormalized = glm::vec3(pitchT * glm::vec4(RightNormalized, 1.0));
+	CameraUpNormalized = glm::vec3(pitchT * glm::vec4(CameraUpNormalized, 1.0));
 }
 
 void Camera::RotateByRoll(float angleDelta)
 {
-	roll += 0.0f;
+	roll += angleDelta;
+
+	glm::mat4 rollT(1.0f);
+
+	rollT = glm::rotate(rollT, glm::radians(angleDelta), LookNormalized);
+
+	LookNormalized = glm::vec3(rollT * glm::vec4(LookNormalized, 1.0));
+	RightNormalized = glm::vec3(rollT * glm::vec4(RightNormalized, 1.0));
+	CameraUpNormalized = glm::vec3(rollT * glm::vec4(CameraUpNormalized, 1.0));
 }
 
 
 void Camera::MoveInForwardDirection(const float& time, const bool& forward, const bool& shifted)
 {
-	//FPS-like movement
-	/*ForwardMoveNormalized.x = LookNormalized.x;
-	ForwardMoveNormalized.z = LookNormalized.z;
-	ForwardMoveNormalized = glm::normalize(ForwardMoveNormalized);*/
 	ForwardMoveNormalized = LookNormalized;
 	float shiftedTime = time;
 	if (shifted)
@@ -115,11 +106,11 @@ void Camera::MoveVertically(const float& time, const bool& upward, const bool& s
 
 	if (upward)
 	{
-		position += glm::vec3(0.0f, 1.0f, 0.0f) * speed * shiftedTime;
+		position += CameraUpNormalized * speed * shiftedTime;
 	}
 	else
 	{
-		position -= glm::vec3(0.0f, 1.0f, 0.0f) * speed * shiftedTime;
+		position -= CameraUpNormalized * speed * shiftedTime;
 	}
 }
 
@@ -134,12 +125,6 @@ glm::mat4 Camera::generateViewMatrix()
 {
 	glm::mat4 view;
 	view = glm::lookAt(position, position + LookNormalized, CameraUpNormalized);
-
-	if (rollReversed)
-	{
-
-	}
-
 	return view;
 }
 
