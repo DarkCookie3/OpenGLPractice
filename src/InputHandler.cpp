@@ -19,28 +19,28 @@ void InputHandler::ProcessInput(GLFWwindow* window, float currentTime)
 		shifted = true;
 		
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.MoveInForwardDirection(deltaTime, true, shifted);
+		camera.MoveInForwardDirection(deltaTime, shifted);
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.MoveInForwardDirection(deltaTime, false, shifted);
+		camera.MoveInForwardDirection(-deltaTime, shifted);
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.MoveByDash(deltaTime, false, shifted);
+		camera.MoveByDash(-deltaTime, shifted);
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.MoveByDash(deltaTime, true, shifted);
+		camera.MoveByDash(deltaTime, shifted);
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		camera.MoveVertically(deltaTime, false, shifted);
+		camera.MoveVertically(-deltaTime);
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		camera.MoveVertically(deltaTime, true, shifted);
+		camera.MoveVertically(deltaTime);
 
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		camera.RotateByRoll(-deltaTime * 100.0f);
+		camera.RotateByRoll(-deltaTime);
 
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		camera.RotateByRoll(deltaTime * 100.0f);
+		camera.RotateByRoll(deltaTime);
 }
 
 void InputHandler::mouse_callback(double xpos, double ypos)

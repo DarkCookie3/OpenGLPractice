@@ -18,48 +18,46 @@ Camera::Camera(glm::vec3 pos, glm::vec3 look)
 	roll = 0.0f;
 }
 
-void Camera::RotateByYaw(float angleDelta)
+void Camera::RotateByYaw(const float& angleDelta)
 {
 	yaw += angleDelta;
 	
 	glm::mat4 yawT(1.0f);
 
+	
 	yawT = glm::rotate(yawT, glm::radians(-angleDelta), CameraUpNormalized);
 
 	LookNormalized = glm::vec3(yawT * glm::vec4(LookNormalized, 1.0));
 	RightNormalized = glm::vec3(yawT * glm::vec4(RightNormalized, 1.0));
-	CameraUpNormalized = glm::vec3(yawT * glm::vec4(CameraUpNormalized, 1.0));
 }
 
-void Camera::RotateByPitch(float angleDelta)
+void Camera::RotateByPitch(const float& angleDelta)
 {
 	pitch += angleDelta;
-	float clampedAngle = fmodf(pitch, 360.0f);
-	
 	glm::mat4 pitchT(1.0f);
 
 	pitchT = glm::rotate(pitchT, glm::radians(angleDelta), RightNormalized);
 
 	LookNormalized = glm::vec3(pitchT * glm::vec4(LookNormalized, 1.0));
-	RightNormalized = glm::vec3(pitchT * glm::vec4(RightNormalized, 1.0));
 	CameraUpNormalized = glm::vec3(pitchT * glm::vec4(CameraUpNormalized, 1.0));
 }
 
-void Camera::RotateByRoll(float angleDelta)
-{
+void Camera::RotateByRoll(const float& time)
+{	
+	float angleDelta = time * rollSpeed;
+
 	roll += angleDelta;
 
 	glm::mat4 rollT(1.0f);
 
 	rollT = glm::rotate(rollT, glm::radians(angleDelta), LookNormalized);
 
-	LookNormalized = glm::vec3(rollT * glm::vec4(LookNormalized, 1.0));
 	RightNormalized = glm::vec3(rollT * glm::vec4(RightNormalized, 1.0));
 	CameraUpNormalized = glm::vec3(rollT * glm::vec4(CameraUpNormalized, 1.0));
 }
 
 
-void Camera::MoveInForwardDirection(const float& time, const bool& forward, const bool& shifted)
+void Camera::MoveInForwardDirection(const float& time, const bool& shifted)
 {
 	ForwardMoveNormalized = LookNormalized;
 	float shiftedTime = time;
@@ -67,51 +65,23 @@ void Camera::MoveInForwardDirection(const float& time, const bool& forward, cons
 	{
 		shiftedTime *= shiftedFactor;
 	}
-
-	if (forward)
-	{
-		position += ForwardMoveNormalized * speed * shiftedTime;
-	}
-	else
-	{
-		position -= ForwardMoveNormalized * speed * shiftedTime;
-	}
+	position += ForwardMoveNormalized * speed * shiftedTime;
 }
 
-void Camera::MoveByDash(const float& time, const bool& rightward, const bool& shifted)
+void Camera::MoveByDash(const float& time, const bool& shifted)
 {
 	float shiftedTime = time;
 	if (shifted)
 	{
 		shiftedTime *= shiftedFactor;
 	}
-
-	if (rightward)
-	{
-		position += RightNormalized * speed * shiftedTime;
-	}
-	else
-	{
-		position -= RightNormalized * speed * shiftedTime;
-	}
+	position += RightNormalized * speed * shiftedTime;
 }
 
-void Camera::MoveVertically(const float& time, const bool& upward, const bool& shifted)
+void Camera::MoveVertically(const float& time)
 {
 	float shiftedTime = time;
-	if (shifted)
-	{
-		shiftedTime *= shiftedFactor;
-	}
-
-	if (upward)
-	{
-		position += CameraUpNormalized * speed * shiftedTime;
-	}
-	else
-	{
-		position -= CameraUpNormalized * speed * shiftedTime;
-	}
+	position += CameraUpNormalized * speed * shiftedTime;
 }
 
 glm::mat4 Camera::generateProjectionMatrix(float aspect, float near, float far)

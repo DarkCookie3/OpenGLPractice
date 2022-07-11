@@ -8,20 +8,20 @@ public:
 	Camera(glm::vec3 pos = glm::vec3(0.0f, 0.0f, 3.0f),
 		glm::vec3 look = glm::vec3(0.0f, 0.0f, -1.0f));
 
-	void RotateByYaw(float angleDelta);
-	void RotateByPitch(float angleDelta);
-	void RotateByRoll(float angleDelta);
+	void RotateByYaw(const float& angleDelta);
+	void RotateByPitch(const float& angleDelta);
+	void RotateByRoll(const float& time);
 
-	virtual void MoveInForwardDirection(const float& time, const bool& forward, const bool& shifted);
-	void MoveByDash(const float& time, const bool& rightward, const bool& shifted);
-	void MoveVertically(const float& time, const bool& upward, const bool& shifted);
+	virtual void MoveInForwardDirection(const float& time, const bool& shifted);
+	void MoveByDash(const float& time, const bool& shifted);
+	void MoveVertically(const float& time);
 
 	glm::mat4 generateProjectionMatrix(float aspect, float near, float far);
 	glm::mat4 generateViewMatrix();
 
 	void ChangeZoom(float angleDelta);
 
-	float GetFov() { return fov; }
+	float GetFov() const { return fov; }
 private:
 	glm::vec3 position;
 
@@ -37,5 +37,6 @@ private:
 
 	float fov = 45.0f;
 	float speed = 5.0f;
+	float rollSpeed = 100.0f;
 	float shiftedFactor = 3.0f;
 };

@@ -27,9 +27,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 static Camera mainCamera = Camera();
 static InputHandler mainHandler = InputHandler(mainCamera);
 
-static Camera secondCamera = Camera();
-static InputHandler secondHandler = InputHandler(secondCamera);
-
 void mouseWrapper(GLFWwindow* window, double x, double y)
 {
 	mainHandler.mouse_callback(x, y);
@@ -176,9 +173,6 @@ int main()
 		glm::vec3(1.5f, 0.2f, -1.5f),
 		glm::vec3(-1.3f, 1.0f, -1.5f)
 	};
-
-	float yaw = -90.0f;
-	
 
 	while (!glfwWindowShouldClose(window))
 	{
