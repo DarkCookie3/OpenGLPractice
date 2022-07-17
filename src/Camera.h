@@ -22,6 +22,7 @@ public:
 	void ChangeZoom(float angleDelta);
 
 	float GetFov() const { return fov; }
+	glm::vec3 GetPosition() const { return position; }
 private:
 	glm::vec3 position;
 
@@ -32,11 +33,12 @@ private:
 	glm::vec3 CameraUpNormalized;
 	//distinguish between look and move for case of moving only on plane(FPS like camera)
 	glm::vec3 ForwardMoveNormalized;
+	glm::vec3 YawRotationUp;
 	glm::vec3 LookNormalized;
 	glm::vec3 RightNormalized;
 
 	float fov = 45.0f;
 	float speed = 5.0f;
-	float rollSpeed = 100.0f;
+	float rollSpeed = 80.0f;
 	float shiftedFactor = 3.0f;
 };

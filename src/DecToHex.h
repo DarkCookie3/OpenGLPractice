@@ -1,3 +1,3 @@
 #pragma once
 
-	std::string DecToHex(unsigned int& decimal);
+std::string DecToHex(unsigned int& decimal);

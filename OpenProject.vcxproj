@@ -119,6 +119,7 @@
     <Library Include="Dependencies\GLFW\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Shaders\LightingFragment.shader" />
     <None Include="Resources\Shaders\Vertex.shader" />
     <None Include="Resources\Shaders\Fragment.shader" />
   </ItemGroup>

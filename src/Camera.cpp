@@ -13,6 +13,7 @@ Camera::Camera(glm::vec3 pos, glm::vec3 look)
 	LookNormalized = glm::normalize(look);
 	RightNormalized = glm::normalize(glm::cross(look, glm::vec3(0.0f, 1.0f, 0.0f)));
 	CameraUpNormalized = glm::cross(RightNormalized, look);
+	YawRotationUp = CameraUpNormalized;
 	pitch = 0.0f;
 	yaw = -90.0f;
 	roll = 0.0f;
@@ -22,13 +23,13 @@ void Camera::RotateByYaw(const float& angleDelta)
 {
 	yaw += angleDelta;
 	
-	glm::mat4 yawT(1.0f);
+	glm::mat4 yawT(1.0f);	
 
-	
-	yawT = glm::rotate(yawT, glm::radians(-angleDelta), CameraUpNormalized);
+	yawT = glm::rotate(yawT, glm::radians(-angleDelta), YawRotationUp);
 
 	LookNormalized = glm::vec3(yawT * glm::vec4(LookNormalized, 1.0));
 	RightNormalized = glm::vec3(yawT * glm::vec4(RightNormalized, 1.0));
+	CameraUpNormalized = glm::vec3(yawT * glm::vec4(CameraUpNormalized, 1.0));
 }
 
 void Camera::RotateByPitch(const float& angleDelta)
@@ -54,6 +55,8 @@ void Camera::RotateByRoll(const float& time)
 
 	RightNormalized = glm::vec3(rollT * glm::vec4(RightNormalized, 1.0));
 	CameraUpNormalized = glm::vec3(rollT * glm::vec4(CameraUpNormalized, 1.0));
+	YawRotationUp = glm::vec3(rollT * glm::vec4(YawRotationUp, 1.0));
+
 }
 
 

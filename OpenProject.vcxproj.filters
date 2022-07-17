@@ -102,5 +102,6 @@
   <ItemGroup>
     <None Include="Resources\Shaders\Vertex.shader" />
     <None Include="Resources\Shaders\Fragment.shader" />
+    <None Include="Resources\Shaders\LightingFragment.shader" />
   </ItemGroup>
 </Project>
