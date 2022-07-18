@@ -112,37 +112,10 @@ int main()
 		0.5f, 1.0f // top-center corner
 	};
 
-	unsigned int indices[] = {
-		0, 1, 2, 
-		0, 2, 3,
-
-		4, 5, 6,
-		4, 6, 7,
-
-		0, 4, 5,
-		0, 5, 1,
-
-		3, 2, 6,
-		3, 6, 7,
-
-		3, 0, 4,
-		3, 4, 7,
-
-		2, 1, 5,
-		2, 5, 6
-	};
-
 	//auto VAO = VertexArray();
 	auto lightVAO = VertexArray();
 
-	auto EBO = IndexBuffer(indices, sizeof(indices)/sizeof(float));
-	EBO.Bind();
-
 	auto VBO = VertexBuffer(vertices, sizeof(vertices));
-
-	/*auto layout = VertexBufferLayout();
-	layout.Push<float>(3);
-	layout.Push<float>(2);*/
 
 	auto layoutLight = VertexBufferLayout();
 	layoutLight.Push<float>(3);
@@ -155,11 +128,16 @@ int main()
 	Shader baseShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/Fragment.shader");
 	baseShader.Bind();
 
-	baseShader.SetUniform3f("material.ambient", 0.3f, 0.1f, 0.8f);
-	baseShader.SetUniform3f("material.diffuse", 0.3f, 0.1f, 0.8f);
-	baseShader.SetUniform3f("material.specular", 0.3f, 0.1f, 0.8f);
-	baseShader.SetUniform1f("material.shininess", 32.0f);
+	Texture Edward = Texture("../OpenProject/Resources/Textures/Edward.jpg");
+	Edward.Bind(0);
+	baseShader.SetUniform1i("material.diffuse", 0);
 
+	Texture EdwardSpecular = Texture("../OpenProject/Resources/Textures/EdwardSpecular.jpg");
+	EdwardSpecular.Bind(1);
+	baseShader.SetUniform1i("material.specular", 0);
+
+	baseShader.SetUniform1f("material.shininess", 32.0f);
+	
 	glm::mat4 trans = glm::mat4(1.0f);
 	trans = glm::rotate(trans, glm::radians(1.0f), glm::vec3(0.0, 0.0, 1.0));
 
@@ -170,19 +148,6 @@ int main()
 	normals = glm::transpose(glm::inverse(model));
 
 	glEnable(GL_DEPTH_TEST);
-
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(2.0f, 5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f, 3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f, 2.0f, -2.5f),
-		glm::vec3(1.5f, 0.2f, -1.5f),
-		glm::vec3(-1.3f, 1.0f, -1.5f)
-	};
 
 	glm::vec3 viewPos = glm::vec3(1.0f);
 	glm::vec3 lightPos(0.8f, 1.4f, 2.0f);
@@ -213,7 +178,7 @@ int main()
 		lightColor.x = sin(glfwGetTime() * 2.0f);
 		lightColor.y = sin(glfwGetTime() * 0.7f);
 		lightColor.z = sin(glfwGetTime() * 1.3f);
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.8f);
 		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 
 		lightShader.Bind();
@@ -228,6 +193,14 @@ int main()
 		viewPos = mainCamera.GetPosition();
 
 		baseShader.Bind();
+
+
+		Edward.Bind(0);
+		baseShader.SetUniform1i("material.diffuse", 0);
+		EdwardSpecular.Bind(1);
+		baseShader.SetUniform1i("material.specular", 1);
+
+
 		baseShader.SetUniform3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
 		baseShader.SetUniform3f("viewPos", viewPos.x, viewPos.y, viewPos.z);
 		baseShader.SetUniform4fv("model", glm::value_ptr(model));
