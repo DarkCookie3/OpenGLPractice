@@ -23,6 +23,7 @@ public:
 
 	float GetFov() const { return fov; }
 	glm::vec3 GetPosition() const { return position; }
+	glm::vec3 GetLookDirection() const { return LookNormalized; }
 private:
 	glm::vec3 position;
 
