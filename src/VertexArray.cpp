@@ -3,14 +3,47 @@
 #include "VertexBufferLayout.h"
 #include "Renderer.h"
 
+std::unordered_map<unsigned int, int> VertexArray::numOfInstances;
+
 VertexArray::VertexArray()
 {
 	GLCall(glGenVertexArrays(1, &m_RendererID));
 }
 
-VertexArray::~VertexArray()
+VertexArray::VertexArray(const VertexArray& arg) : m_RendererID(arg.m_RendererID)
 {
-	GLCall(glDeleteVertexArrays(1, &m_RendererID));
+	numOfInstances[m_RendererID] += 1;
+}
+
+VertexArray::VertexArray(VertexArray&& arg) noexcept : m_RendererID(arg.m_RendererID)
+{
+	arg.m_RendererID = 0;
+}
+
+VertexArray& VertexArray::operator=(const VertexArray& arg)
+{
+	m_RendererID = arg.m_RendererID;
+	numOfInstances[m_RendererID] += 1;
+	return *this;
+}
+
+VertexArray& VertexArray::operator=(VertexArray&& arg) noexcept
+{
+	m_RendererID = arg.m_RendererID;
+	arg.m_RendererID = 0;
+	return *this;
+}
+
+VertexArray::~VertexArray()
+{	
+	if (m_RendererID != 0)
+	{
+		if (numOfInstances[m_RendererID] == 1 && m_RendererID != 0)
+		{
+			GLCall(glDeleteVertexArrays(1, &m_RendererID));
+		}
+		numOfInstances[m_RendererID] -= 1;
+	}
 }
 
 void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)

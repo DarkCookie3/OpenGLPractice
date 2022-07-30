@@ -12,7 +12,7 @@ public:
 	void RotateByPitch(const float& angleDelta);
 	void RotateByRoll(const float& time);
 
-	virtual void MoveInForwardDirection(const float& time, const bool& shifted);
+	void MoveInForwardDirection(const float& time, const bool& shifted);
 	void MoveByDash(const float& time, const bool& shifted);
 	void MoveVertically(const float& time);
 

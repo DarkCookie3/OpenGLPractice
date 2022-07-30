@@ -18,6 +18,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "Assimp/config.h"
+#include "Model.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -65,7 +67,8 @@ int main()
 	glfwSetCursorPosCallback(window, mouseWrapper);
 	glfwSetScrollCallback(window, scrollWrapper);
 	
-
+	Model backpack("E:/OpenGLPractice/OpenProject/Resources/Models/Backpack/backpack.obj");
+	
 	float vertices[] = {
 		// positions          // normals          // texture coords
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
@@ -141,15 +144,6 @@ int main()
 
 	Shader baseShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/Fragment.shader");
 	baseShader.Bind();
-
-	Texture Edward = Texture("../OpenProject/Resources/Textures/Edward.jpg");
-	Edward.Bind(0);
-	
-	Texture EdwardSpecular = Texture("../OpenProject/Resources/Textures/EdwardSpecular.jpg");
-	EdwardSpecular.Bind(1);
-
-	baseShader.SetUniform1i("material.diffuse", 0);
-	baseShader.SetUniform1i("material.specular", 1);
 	baseShader.SetUniform1f("material.shininess", 32.0f);
 
 	glm::mat4 model = glm::mat4(1.0f);
@@ -157,6 +151,7 @@ int main()
 	glm::mat3 normals = glm::mat3(1.0f);
 
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	glm::vec3 viewPos = glm::vec3(1.0f);
 	glm::vec3 lookDir = glm::vec3(1.0f);
@@ -175,8 +170,8 @@ int main()
 		lightColor.x = sin(glfwGetTime() * 2.0f)/2.0f + 1.0f;
 		lightColor.y = sin(glfwGetTime() * 0.7f)/2.0f + 1.0f;
 		lightColor.z = sin(glfwGetTime() * 1.3f)/2.0f + 1.0f;
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.85f);
-		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.3f);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.8f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 
 		lightShader.Bind();
 		lightShader.SetUniform4fv("model", glm::value_ptr(model));
@@ -205,8 +200,6 @@ int main()
 		viewPos = mainCamera.GetPosition();	
 		lookDir = mainCamera.GetLookDirection();
 
-		Edward.Bind(0);
-		EdwardSpecular.Bind(1);
 
 		baseShader.Bind();
 		baseShader.SetUniform3f("viewPos", viewPos.x, viewPos.y, viewPos.z);
@@ -275,6 +268,12 @@ int main()
 			baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(1.0f, 2.0f, 3.0f));
+		normals = glm::transpose(glm::inverse(trans));
+		baseShader.SetUniform4fv("model", glm::value_ptr(trans));
+		baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
+		backpack.Draw(baseShader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

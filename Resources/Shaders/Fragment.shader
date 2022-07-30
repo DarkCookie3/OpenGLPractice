@@ -8,8 +8,8 @@ out vec4 FragColor;
 
 struct Material 
 {
-	sampler2D diffuse;
-	sampler2D specular;
+	sampler2D texture_diffuse1;
+	sampler2D texture_specular1;
 	float shininess;
 };
 
@@ -77,8 +77,8 @@ void main()
 	vec3 norm = normalize(Normal);
 	vec3 viewDir = normalize(viewPos - FragPos);
 
-	sampleTextures.matDiffTextureVec = vec3(texture(material.diffuse, TexCoords));
-	sampleTextures.matSpecTextureVec = vec3(texture(material.specular, TexCoords));
+	sampleTextures.matDiffTextureVec = vec3(texture(material.texture_diffuse1, TexCoords));
+	sampleTextures.matSpecTextureVec = vec3(texture(material.texture_specular1, TexCoords));
 
 	vec3 result = vec3(0.0, 0.0, 0.0);
 
