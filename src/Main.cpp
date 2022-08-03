@@ -143,6 +143,7 @@ int main()
 	lightVAO.AddBuffer(VBO, layoutLight);
 
 	Shader baseShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/Fragment.shader");
+	Shader solidColorShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/SolidColorFragment.shader");
 	baseShader.Bind();
 	baseShader.SetUniform1f("material.shininess", 32.0f);
 
@@ -151,12 +152,15 @@ int main()
 	glm::mat3 normals = glm::mat3(1.0f);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
 	glDepthFunc(GL_LESS);
 
 	glm::vec3 viewPos = glm::vec3(1.0f);
 	glm::vec3 lookDir = glm::vec3(1.0f);
 
 	Shader lightShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/LightingFragment.shader");
+	Texture crate("../OpenProject/Resources/Textures/Crate.jpg", TextureType::diffuse);
+	Texture crateSpec("../OpenProject/Resources/Textures/CrateSpecular.jpg", TextureType::specular);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -179,6 +183,12 @@ int main()
 		lightShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
 		lightShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
 		
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_STENCIL_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+
 		for (unsigned int i = 0; i < sizeof(pointLightPositions) / sizeof(pointLightPositions[0]); i++)
 		{
 			glm::mat4 lightT = glm::mat4(1.0f);
@@ -200,6 +210,9 @@ int main()
 		viewPos = mainCamera.GetPosition();	
 		lookDir = mainCamera.GetLookDirection();
 
+		solidColorShader.Bind();
+		solidColorShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
+		solidColorShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
 
 		baseShader.Bind();
 		baseShader.SetUniform3f("viewPos", viewPos.x, viewPos.y, viewPos.z);
@@ -255,8 +268,17 @@ int main()
 		baseShader.SetUniform1f("spotLights[0].quadratic", 0.032f);
 		baseShader.SetUniform1f("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
 		baseShader.SetUniform1f("spotLights[0].cutOffOuter", glm::cos(glm::radians(15.0f)));
-		
+
 		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(1.0f, 2.0f, 3.0f));
+		normals = glm::transpose(glm::inverse(model));
+		baseShader.SetUniform4fv("model", glm::value_ptr(model));
+		baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
+		backpack.Draw(baseShader);
+
+		lightVAO.Bind();
+		crate.Bind(0);
+		crateSpec.Bind(1);
 		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); i++)
 		{
 			glm::mat4 trans = glm::mat4(1.0f);
@@ -268,18 +290,31 @@ int main()
 			baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-		glm::mat4 trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(1.0f, 2.0f, 3.0f));
-		normals = glm::transpose(glm::inverse(trans));
-		baseShader.SetUniform4fv("model", glm::value_ptr(trans));
-		baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
-		backpack.Draw(baseShader);
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		solidColorShader.Bind();
+		for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++)
+		{
+			glm::mat4 trans = glm::mat4(1.0f);
+			trans = glm::translate(trans, cubePositions[i]);
+			float angle = 20.0f * i;
+			trans = glm::rotate(trans, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			trans = glm::scale(trans, glm::vec3(1.1f, 1.1f, 1.1f));
+			solidColorShader.SetUniform4fv("model", glm::value_ptr(trans));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
 		glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 	glfwTerminate();
 	return 0;

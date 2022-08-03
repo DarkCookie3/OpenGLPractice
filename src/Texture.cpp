@@ -14,14 +14,7 @@ Texture::Texture(const std::string& path, TextureType type)
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
 
 	numOfInstances[m_RendererID] = 1;
-
-	GLenum format = GL_RGBA;
-	if (m_BPP == 1)
-		format = GL_RED;
-	else if (m_BPP == 3)
-		format = GL_RGB;
-
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer));
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer));
 	GLCall(glGenerateMipmap(GL_TEXTURE_2D));
 
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR));
