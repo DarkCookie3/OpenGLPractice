@@ -22,6 +22,7 @@ VertexArray::VertexArray(VertexArray&& arg) noexcept : m_RendererID(arg.m_Render
 
 VertexArray& VertexArray::operator=(const VertexArray& arg)
 {
+	numOfInstances[m_RendererID] -= 1;
 	m_RendererID = arg.m_RendererID;
 	numOfInstances[m_RendererID] += 1;
 	return *this;
@@ -29,6 +30,7 @@ VertexArray& VertexArray::operator=(const VertexArray& arg)
 
 VertexArray& VertexArray::operator=(VertexArray&& arg) noexcept
 {
+	numOfInstances[m_RendererID] -= 1;
 	m_RendererID = arg.m_RendererID;
 	arg.m_RendererID = 0;
 	return *this;

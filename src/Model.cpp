@@ -111,7 +111,6 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 		{
 			if (textures_loaded[j].GetPath() == filename)
 			{
-				//textures.push_back(textures_loaded[j]);
 				skip = true;
 				break;
 			}

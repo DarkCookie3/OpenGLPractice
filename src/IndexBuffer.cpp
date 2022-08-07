@@ -37,6 +37,7 @@ IndexBuffer::IndexBuffer(IndexBuffer&& arg) noexcept : m_RendererID(arg.m_Render
 
 IndexBuffer& IndexBuffer::operator=(const IndexBuffer& arg)
 {
+    numOfInstances[m_RendererID] -= 1;
     m_RendererID = arg.m_RendererID;
     m_Count = arg.m_Count;
     numOfInstances[m_RendererID] += 1;
@@ -45,6 +46,7 @@ IndexBuffer& IndexBuffer::operator=(const IndexBuffer& arg)
 
 IndexBuffer& IndexBuffer::operator=(IndexBuffer&& arg) noexcept
 {
+    numOfInstances[m_RendererID] -= 1;
     m_RendererID = arg.m_RendererID;
     m_Count = arg.m_Count;
     arg.m_RendererID = 0;

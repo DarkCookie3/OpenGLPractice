@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Shader.h"
@@ -122,6 +123,18 @@ int main()
 		glm::vec3(-2.3f, 1.0f, -3.5f)
 	};
 
+	float quad[] = {
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+		0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+		0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f
+	};
+
+	unsigned int quadIndices[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(0.7f, 0.2f, 2.0f),
 		glm::vec3(2.3f, -3.3f, -4.0f),
@@ -129,18 +142,30 @@ int main()
 		glm::vec3(0.0f, 0.0f, -3.0f)
 	};
 
-	//auto VAO = VertexArray();
-	auto lightVAO = VertexArray();
+	std::vector<glm::vec3> vegetation;
+	vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+	vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+	vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+	vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+	vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+
+	auto cubeVAO = VertexArray();
+	auto quadVAO = VertexArray();
 
 	auto VBO = VertexBuffer(vertices, sizeof(vertices));
+	auto quadVBO = VertexBuffer(quad, sizeof(quad));
 
-	auto layoutLight = VertexBufferLayout();
-	layoutLight.Push<float>(3);
-	layoutLight.Push<float>(3);
-	layoutLight.Push<float>(2);
+	auto layout = VertexBufferLayout();
+	layout.Push<float>(3);
+	layout.Push<float>(3);
+	layout.Push<float>(2);
 
-	//VAO.AddBuffer(VBO, layout);
-	lightVAO.AddBuffer(VBO, layoutLight);
+	cubeVAO.AddBuffer(VBO, layout);
+	quadVAO.AddBuffer(quadVBO, layout);
+
+	quadVAO.Bind();
+	auto quadEBO = IndexBuffer(&quadIndices[0], sizeof(quadIndices) / sizeof(quadIndices[0]));
+	quadEBO.Bind();
 
 	Shader baseShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/Fragment.shader");
 	Shader solidColorShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/SolidColorFragment.shader");
@@ -151,22 +176,29 @@ int main()
 
 	glm::mat3 normals = glm::mat3(1.0f);
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_STENCIL_TEST);
-	glDepthFunc(GL_LESS);
-
 	glm::vec3 viewPos = glm::vec3(1.0f);
 	glm::vec3 lookDir = glm::vec3(1.0f);
 
 	Shader lightShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/LightingFragment.shader");
+	
 	Texture crate("../OpenProject/Resources/Textures/Crate.jpg", TextureType::diffuse);
 	Texture crateSpec("../OpenProject/Resources/Textures/CrateSpecular.jpg", TextureType::specular);
+
+	Texture vegetationTexture("../OpenProject/Resources/Textures/VegetationBlue.png", TextureType::diffuse);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
+	glStencilMask(0xFF);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glDepthFunc(GL_LESS);
 
 	while (!glfwWindowShouldClose(window))
 	{
 		mainHandler.ProcessInput(window, glfwGetTime());
 
-		lightVAO.Bind();
+		cubeVAO.Bind();
 
 		model = glm::mat4(1.0f);
 
@@ -183,6 +215,8 @@ int main()
 		lightShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
 		lightShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
 		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_STENCIL_TEST);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -276,7 +310,7 @@ int main()
 		baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
 		backpack.Draw(baseShader);
 
-		lightVAO.Bind();
+		cubeVAO.Bind();
 		crate.Bind(0);
 		crateSpec.Bind(1);
 		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); i++)
@@ -295,6 +329,7 @@ int main()
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 
+		cubeVAO.Bind();
 		solidColorShader.Bind();
 		for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++)
 		{
@@ -308,7 +343,29 @@ int main()
 		}
 
 		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glEnable(GL_DEPTH_TEST);
+
+		std::map<float, glm::vec3> sorted;
+		for (unsigned int i = 0; i < vegetation.size(); i++)
+		{
+			float distance = glm::length(viewPos - vegetation[i]);
+			sorted[distance] = vegetation[i];
+		}
+
+		quadVAO.Bind();
+		baseShader.Bind();
+		vegetationTexture.Bind(0);
+		baseShader.SetUniform1i("material.texture_specular1", 0);
+		for (std::map<float, glm::vec3>::reverse_iterator i = sorted.rbegin(); i != sorted.rend(); i++)
+		{
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, i->second);
+			normals = glm::transpose(glm::inverse(model));
+			baseShader.SetUniform4fv("model", glm::value_ptr(model));
+			baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

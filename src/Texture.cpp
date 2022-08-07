@@ -31,21 +31,26 @@ Texture::Texture(const std::string& path, TextureType type)
 }
 
 Texture::Texture(const Texture& arg) noexcept
-	: m_RendererID(arg.m_RendererID), m_FilePath(arg.m_FilePath), m_LocalBuffer(arg.m_LocalBuffer),
+	: m_FilePath(arg.m_FilePath), m_LocalBuffer(arg.m_LocalBuffer),
 	m_Width(arg.m_Width), m_Height(arg.m_Height), m_BPP(arg.m_BPP), m_TexType(arg.m_TexType)
 {
+	numOfInstances[m_RendererID] -= 1;
+	m_RendererID = arg.m_RendererID;
 	numOfInstances[m_RendererID] += 1;
 }
 
 Texture::Texture(Texture&& arg) noexcept
-	: m_RendererID(arg.m_RendererID), m_FilePath(arg.m_FilePath), m_LocalBuffer(arg.m_LocalBuffer),
+	: m_FilePath(arg.m_FilePath), m_LocalBuffer(arg.m_LocalBuffer),
 	m_Width(arg.m_Width), m_Height(arg.m_Height), m_BPP(arg.m_BPP), m_TexType(arg.m_TexType)
 {
+	numOfInstances[m_RendererID] -= 1;
+	m_RendererID = arg.m_RendererID;
 	arg.m_RendererID = 0;
 }
 
 Texture& Texture::operator=(const Texture& arg) noexcept
 {
+	numOfInstances[m_RendererID] -= 1;
 	m_RendererID = arg.m_RendererID;
 	m_FilePath = arg.m_FilePath;
 	m_LocalBuffer = arg.m_LocalBuffer;
@@ -59,6 +64,7 @@ Texture& Texture::operator=(const Texture& arg) noexcept
 
 Texture& Texture::operator=(Texture&& arg) noexcept
 {
+	numOfInstances[m_RendererID] -= 1;
 	m_RendererID = arg.m_RendererID;
 	m_FilePath = arg.m_FilePath;
 	m_LocalBuffer = arg.m_LocalBuffer;

@@ -22,6 +22,7 @@ VertexBuffer::VertexBuffer(VertexBuffer&& arg) noexcept : m_RendererID(arg.m_Ren
 
 VertexBuffer& VertexBuffer::operator=(const VertexBuffer& arg)
 {
+    numOfInstances[m_RendererID] -= 1;
     m_RendererID = arg.m_RendererID;
     numOfInstances[m_RendererID] += 1;
     return *this;
@@ -29,6 +30,7 @@ VertexBuffer& VertexBuffer::operator=(const VertexBuffer& arg)
 
 VertexBuffer& VertexBuffer::operator=(VertexBuffer&& arg) noexcept
 {
+    numOfInstances[m_RendererID] -= 1;
     m_RendererID = arg.m_RendererID;
     arg.m_RendererID = 0;
     return *this;

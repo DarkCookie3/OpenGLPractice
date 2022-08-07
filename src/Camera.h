@@ -32,7 +32,6 @@ private:
 	float roll;
 
 	glm::vec3 CameraUpNormalized;
-	//distinguish between look and move for case of moving only on plane(FPS like camera)
 	glm::vec3 ForwardMoveNormalized;
 	glm::vec3 YawRotationUp;
 	glm::vec3 LookNormalized;
