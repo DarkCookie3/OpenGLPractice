@@ -71,43 +71,48 @@ int main()
 	Model backpack("E:/OpenGLPractice/OpenProject/Resources/Models/Backpack/backpack.obj");
 	
 	float vertices[] = {
-		// positions          // normals          // texture coords
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,  1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f,    0.0f, 0.0f, -1.0f,  1.0f, 1.0f,
-		0.5f, 0.5f, -0.5f,    0.0f, 0.0f, -1.0f,  1.0f, 1.0f,
-		-0.5f, 0.5f, -0.5f,   0.0f, 0.0f, -1.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-		0.5f, -0.5f, 0.5f,    0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f,     0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f,     0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-		-0.5f, 0.5f, 0.5f,    0.0f, 0.0f, 1.0f,   0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f,    -1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f,   -1.0f, 0.0f, 0.0f,  0.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f,    -1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f,     1.0f, 0.0f, 0.0f,   1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f,    1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,
-		0.5f, -0.5f, 0.5f,    1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
-		0.5f, 0.5f, 0.5f,     1.0f, 0.0f, 0.0f,   1.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f, 0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,   0.0f, -1.0f, 0.0f,  1.0f, 1.0f,
-		0.5f, -0.5f, 0.5f,    0.0f, -1.0f, 0.0f,  1.0f, 0.0f,
-		0.5f, -0.5f, 0.5f,    0.0f, -1.0f, 0.0f,  1.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f,   0.0f, -1.0f, 0.0f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f, 0.0f,  0.0f, 1.0f,
-		-0.5f, 0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
-		0.5f, 0.5f, -0.5f,    0.0f, 1.0f, 0.0f,   1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f,     0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f,     0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f,    0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f
+		// back face
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f, // bottom-left 
+		0.5f, 0.5f, -0.5f,   0.0f, 0.0f, -1.0f,  1.0f, 1.0f, // top-right
+		0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  1.0f, 0.0f, // bottom-right
+		0.5f, 0.5f, -0.5f,   0.0f, 0.0f, -1.0f,  1.0f, 1.0f, // top-right
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f, // bottom-left
+		-0.5f, 0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f, 1.0f, // top-left
+		// front face
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // bottom-left
+		0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  1.0f, 0.0f, // bottom-right
+		0.5f, 0.5f, 0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f, // top-right
+		0.5f, 0.5f, 0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f, // top-right
+		-0.5f, 0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f, // top-left
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // bottom-left
+		// left face
+		-0.5f, 0.5f, 0.5f,   -1.0f, 0.0f, 0.0f,  1.0f, 0.0f, // top-right
+		-0.5f, 0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // top-left
+		-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,  0.0f, 1.0f, // bottom-left
+		-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,  0.0f, 1.0f, // bottom-left
+		-0.5f, -0.5f, 0.5f,  -1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // bottom-right
+		-0.5f, 0.5f, 0.5f,   -1.0f, 0.0f, 0.0f,  1.0f, 0.0f, // top-right
+		// right face
+		0.5f, 0.5f, 0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, // top-left
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f, // bottom-right
+		0.5f, 0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // top-right
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f, // bottom-right
+		0.5f, 0.5f, 0.5f,   1.0f, 0.0f, 0.0f,  1.0f, 0.0f, // top-left
+		0.5f, -0.5f, 0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // bottom-left
+		// bottom face
+		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,  0.0f, 1.0f, // top-right
+		0.5f, -0.5f, -0.5f,  0.0f, -1.0f, 0.0f,  1.0f, 1.0f, // top-left 
+		0.5f, -0.5f, 0.5f,   0.0f, -1.0f, 0.0f,  1.0f, 0.0f, // bottom-left
+		0.5f, -0.5f, 0.5f,   0.0f, -1.0f, 0.0f,  1.0f, 0.0f, // bottom-left
+		-0.5f, -0.5f, 0.5f,  0.0f, -1.0f, 0.0f,  0.0f, 0.0f, // bottom-right
+		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,  0.0f, 1.0f, // top-right
+		// top face
+		-0.5f, 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f, // top-left
+		0.5f, 0.5f, 0.5f,    0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // bottom-right
+		0.5f, 0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 1.0f, // top-right
+		0.5f, 0.5f, 0.5f,    0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // bottom-right
+		-0.5f, 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f, // top-left
+		-0.5f, 0.5f, 0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 0.0f // bottom-left
 	};
 
 	glm::vec3 cubePositions[] = {
@@ -124,15 +129,15 @@ int main()
 	};
 
 	float quad[] = {
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-		0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-		0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f
 	};
 
 	unsigned int quadIndices[] = {
-		0, 1, 2,
-		2, 3, 0
+		2, 1, 0,
+		0, 3, 2
 	};
 
 	glm::vec3 pointLightPositions[] = {
@@ -169,8 +174,51 @@ int main()
 
 	Shader baseShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/Fragment.shader");
 	Shader solidColorShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/SolidColorFragment.shader");
+	Shader screenShader("../OpenProject/Resources/Shaders/VertexFrame.shader", "../OpenProject/Resources/Shaders/FragmentFrame.shader");
+
 	baseShader.Bind();
 	baseShader.SetUniform1f("material.shininess", 32.0f);
+	baseShader.SetUniform3f("dirLights[0].direction", -0.2f, -1.0f, -0.3f);
+	baseShader.SetUniform3f("dirLights[0].ambient", 0.05f, 0.05f, 0.05f);
+	baseShader.SetUniform3f("dirLights[0].diffuse", 0.4f, 0.4f, 0.4f);
+	baseShader.SetUniform3f("dirLights[0].specular", 0.5f, 0.5f, 0.5f);
+	
+	baseShader.SetUniform3f("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+	baseShader.SetUniform3f("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+	baseShader.SetUniform3f("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+	baseShader.SetUniform1f("pointLights[0].constant", 1.0f);
+	baseShader.SetUniform1f("pointLights[0].linear", 0.09f);
+	baseShader.SetUniform1f("pointLights[0].quadratic", 0.032f);
+	
+	baseShader.SetUniform3f("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+	baseShader.SetUniform3f("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+	baseShader.SetUniform3f("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+	baseShader.SetUniform1f("pointLights[1].constant", 1.0f);
+	baseShader.SetUniform1f("pointLights[1].linear", 0.09f);
+	baseShader.SetUniform1f("pointLights[1].quadratic", 0.032f);
+	
+	baseShader.SetUniform3f("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
+	baseShader.SetUniform3f("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
+	baseShader.SetUniform3f("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
+	baseShader.SetUniform1f("pointLights[2].constant", 1.0f);
+	baseShader.SetUniform1f("pointLights[2].linear", 0.09f);
+	baseShader.SetUniform1f("pointLights[2].quadratic", 0.032f);
+	
+	baseShader.SetUniform3f("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
+	baseShader.SetUniform3f("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
+	baseShader.SetUniform3f("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
+	baseShader.SetUniform1f("pointLights[3].constant", 1.0f);
+	baseShader.SetUniform1f("pointLights[3].linear", 0.09f);
+	baseShader.SetUniform1f("pointLights[3].quadratic", 0.032f);
+	
+	baseShader.SetUniform3f("spotLights[0].ambient", 0.0f, 0.0f, 0.0f);
+	baseShader.SetUniform3f("spotLights[0].diffuse", 1.0f, 1.0f, 1.0f);
+	baseShader.SetUniform3f("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
+	baseShader.SetUniform1f("spotLights[0].constant", 1.0f);
+	baseShader.SetUniform1f("spotLights[0].linear", 0.09f);
+	baseShader.SetUniform1f("spotLights[0].quadratic", 0.032f);
+	baseShader.SetUniform1f("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
+	baseShader.SetUniform1f("spotLights[0].cutOffOuter", glm::cos(glm::radians(15.0f)));
 
 	glm::mat4 model = glm::mat4(1.0f);
 
@@ -188,11 +236,43 @@ int main()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
 	glEnable(GL_STENCIL_TEST);
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	glDepthFunc(GL_LESS);
+	
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
+
+	unsigned int framebuffer;
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	unsigned int texColorBuffer;
+	glGenTextures(1, &texColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	}	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -215,6 +295,10 @@ int main()
 		lightShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
 		lightShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
 		
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
@@ -253,58 +337,20 @@ int main()
 		baseShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
 		baseShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
 
-		
-		// directional light
-		baseShader.SetUniform3f("dirLights[0].direction", -0.2f, -1.0f, -0.3f);
-		baseShader.SetUniform3f("dirLights[0].ambient", 0.05f, 0.05f, 0.05f);
-		baseShader.SetUniform3f("dirLights[0].diffuse", 0.4f, 0.4f, 0.4f);
-		baseShader.SetUniform3f("dirLights[0].specular", 0.5f, 0.5f, 0.5f);
 		// point light 1
 		baseShader.SetUniform3f("pointLights[0].position", pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-		baseShader.SetUniform3f("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-		baseShader.SetUniform3f("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-		baseShader.SetUniform3f("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-		baseShader.SetUniform1f("pointLights[0].constant", 1.0f);
-		baseShader.SetUniform1f("pointLights[0].linear", 0.09f);
-		baseShader.SetUniform1f("pointLights[0].quadratic", 0.032f);
 		// point light 2
 		baseShader.SetUniform3f("pointLights[1].position", pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-		baseShader.SetUniform3f("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-		baseShader.SetUniform3f("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-		baseShader.SetUniform3f("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-		baseShader.SetUniform1f("pointLights[1].constant", 1.0f);
-		baseShader.SetUniform1f("pointLights[1].linear", 0.09f);
-		baseShader.SetUniform1f("pointLights[1].quadratic", 0.032f);
 		// point light 3
 		baseShader.SetUniform3f("pointLights[2].position", pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-		baseShader.SetUniform3f("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-		baseShader.SetUniform3f("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-		baseShader.SetUniform3f("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-		baseShader.SetUniform1f("pointLights[2].constant", 1.0f);
-		baseShader.SetUniform1f("pointLights[2].linear", 0.09f);
-		baseShader.SetUniform1f("pointLights[2].quadratic", 0.032f);
 		// point light 4
 		baseShader.SetUniform3f("pointLights[3].position", pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
-		baseShader.SetUniform3f("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-		baseShader.SetUniform3f("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-		baseShader.SetUniform3f("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-		baseShader.SetUniform1f("pointLights[3].constant", 1.0f);
-		baseShader.SetUniform1f("pointLights[3].linear", 0.09f);
-		baseShader.SetUniform1f("pointLights[3].quadratic", 0.032f);
 		// spotLight
 		baseShader.SetUniform3f("spotLights[0].position", viewPos.x, viewPos.y, viewPos.z);
 		baseShader.SetUniform3f("spotLights[0].direction", lookDir.x, lookDir.y, lookDir.z);
-		baseShader.SetUniform3f("spotLights[0].ambient", 0.0f, 0.0f, 0.0f);
-		baseShader.SetUniform3f("spotLights[0].diffuse", 1.0f, 1.0f, 1.0f);
-		baseShader.SetUniform3f("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
-		baseShader.SetUniform1f("spotLights[0].constant", 1.0f);
-		baseShader.SetUniform1f("spotLights[0].linear", 0.09f);
-		baseShader.SetUniform1f("spotLights[0].quadratic", 0.032f);
-		baseShader.SetUniform1f("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
-		baseShader.SetUniform1f("spotLights[0].cutOffOuter", glm::cos(glm::radians(15.0f)));
 
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(1.0f, 2.0f, 3.0f));
+		model = glm::translate(model, glm::vec3(1.0f, 2.0f, -12.0f));
 		normals = glm::transpose(glm::inverse(model));
 		baseShader.SetUniform4fv("model", glm::value_ptr(model));
 		baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
@@ -322,6 +368,7 @@ int main()
 			normals = glm::transpose(glm::inverse(trans));
 			baseShader.SetUniform4fv("model", glm::value_ptr(trans));
 			baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
+			glm::vec4 test = glm::vec4(vegetation[3], 1.0) * model;
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
@@ -367,12 +414,20 @@ int main()
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		}
 
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0); 
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		screenShader.Bind();
+		quadVAO.Bind();
+		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		
 		glfwSwapBuffers(window);
-		glfwPollEvents();
-
-		glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glfwPollEvents();	
 	}
+	//glDeleteFramebuffers(1, &framebuffer);
 	glfwTerminate();
 	return 0;
 }

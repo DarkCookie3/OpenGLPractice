@@ -30,6 +30,16 @@ Texture::Texture(const std::string& path, TextureType type)
 	}
 }
 
+Texture::Texture(int height, int width, TextureType type)
+	: m_RendererID(0), m_FilePath(), m_LocalBuffer(nullptr), m_Width(width), m_Height(height), m_BPP(4), m_TexType(type)
+{
+	glGenTextures(1, &m_RendererID);
+	glBindTexture(GL_TEXTURE_2D, m_RendererID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
 Texture::Texture(const Texture& arg) noexcept
 	: m_FilePath(arg.m_FilePath), m_LocalBuffer(arg.m_LocalBuffer),
 	m_Width(arg.m_Width), m_Height(arg.m_Height), m_BPP(arg.m_BPP), m_TexType(arg.m_TexType)

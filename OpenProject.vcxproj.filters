@@ -54,6 +54,9 @@
     <ClCompile Include="src\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\GLFW\glfw3native.h">
@@ -107,6 +110,9 @@
     <ClInclude Include="src\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Dependencies\GLFW\glfw3.lib" />
@@ -115,5 +121,8 @@
     <None Include="Resources\Shaders\Vertex.shader" />
     <None Include="Resources\Shaders\Fragment.shader" />
     <None Include="Resources\Shaders\LightingFragment.shader" />
+    <None Include="Resources\Shaders\VertexFrame.shader" />
+    <None Include="Resources\Shaders\FragmentFrame.shader" />
+    <None Include="Resources\Shaders\SolidColorFragment.shader" />
   </ItemGroup>
 </Project>

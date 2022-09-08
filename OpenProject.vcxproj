@@ -89,6 +89,7 @@
     <ClCompile Include="Dependencies\GLAD\src\glad.c" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\DecToHex.cpp" />
+    <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\InputHandler.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="Dependencies\GLFW\glfw3native.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\DecToHex.h" />
+    <ClInclude Include="src\Framebuffer.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\InputHandler.h" />
@@ -123,9 +125,12 @@
     <Library Include="Dependencies\GLFW\glfw3.lib" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Shaders\FragmentFrame.shader" />
     <None Include="Resources\Shaders\LightingFragment.shader" />
+    <None Include="Resources\Shaders\SolidColorFragment.shader" />
     <None Include="Resources\Shaders\Vertex.shader" />
     <None Include="Resources\Shaders\Fragment.shader" />
+    <None Include="Resources\Shaders\VertexFrame.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

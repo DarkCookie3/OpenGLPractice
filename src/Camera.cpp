@@ -56,7 +56,6 @@ void Camera::RotateByRoll(const float& time)
 	RightNormalized = glm::vec3(rollT * glm::vec4(RightNormalized, 1.0));
 	CameraUpNormalized = glm::vec3(rollT * glm::vec4(CameraUpNormalized, 1.0));
 	YawRotationUp = glm::vec3(rollT * glm::vec4(YawRotationUp, 1.0));
-
 }
 
 
@@ -97,6 +96,7 @@ glm::mat4 Camera::generateProjectionMatrix(float aspect, float near, float far)
 glm::mat4 Camera::generateViewMatrix()
 {
 	glm::mat4 view;
+	//up vector is already calculated, because CameraUpNormalized is it; Change lookAt to manual matrix filling
 	view = glm::lookAt(position, position + LookNormalized, CameraUpNormalized);
 	return view;
 }

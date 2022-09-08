@@ -7,7 +7,8 @@ enum class TextureType
 {
 	undefined = 0,
 	diffuse,
-	specular
+	specular,
+	frame
 };
 
 
@@ -22,6 +23,7 @@ private:
 	static std::unordered_map<unsigned int, int> numOfInstances;
 public:
 	Texture(const std::string& path, TextureType type);
+	Texture(int height, int width, TextureType type);
 	Texture(const Texture& arg) noexcept;
 	Texture(Texture&& arg) noexcept;
 
