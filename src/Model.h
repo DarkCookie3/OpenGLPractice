@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.h"
+#include "Texture.h"
 #include <vector>
 #include <Assimp/Importer.hpp>
 #include <Assimp/scene.h>

@@ -113,3 +113,13 @@ void Camera::ChangeZoom(float angleDelta)
 		fov = 0.5f;
 	}
 }
+
+void Camera::SetPosition(glm::vec3 arg)
+{
+	position = arg;
+}
+
+void Camera::SetLookDirection(glm::vec3 arg)
+{
+	LookNormalized = glm::normalize(arg);
+}

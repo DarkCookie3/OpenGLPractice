@@ -20,6 +20,8 @@ public:
 	glm::mat4 generateViewMatrix();
 
 	void ChangeZoom(float angleDelta);
+	void SetPosition(glm::vec3 arg);
+	void SetLookDirection(glm::vec3 arg);
 
 	float GetFov() const { return fov; }
 	glm::vec3 GetPosition() const { return position; }

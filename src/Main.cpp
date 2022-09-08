@@ -175,6 +175,7 @@ int main()
 	Shader baseShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/Fragment.shader");
 	Shader solidColorShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/SolidColorFragment.shader");
 	Shader screenShader("../OpenProject/Resources/Shaders/VertexFrame.shader", "../OpenProject/Resources/Shaders/FragmentFrame.shader");
+	Shader mirrorShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/FragmentFrame.shader");
 
 	baseShader.Bind();
 	baseShader.SetUniform1f("material.shininess", 32.0f);
@@ -288,6 +289,11 @@ int main()
 		lightColor.z = sin(glfwGetTime() * 1.3f)/2.0f + 1.0f;
 		glm::vec3 diffuseColor = lightColor * glm::vec3(0.8f);
 		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+	
+		glm::vec3 camPos = mainCamera.GetPosition();
+		glm::vec3 camLook = mainCamera.GetLookDirection();
+		mainCamera.SetPosition(glm::vec3(camPos.x, camPos.y, camPos.z));
+		mainCamera.SetLookDirection(glm::vec3(camLook.x, camLook.y, camLook.z));
 
 		lightShader.Bind();
 		lightShader.SetUniform4fv("model", glm::value_ptr(model));
@@ -414,12 +420,27 @@ int main()
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		}
 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0); 
+		glClearColor(0.6f, 0.1f, 0.2f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		mainCamera.SetPosition(camPos);
+		mainCamera.SetLookDirection(glm::vec3(camLook));
+
+
+
+
+
+
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0); 
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		screenShader.Bind();
+		mirrorShader.Bind();
+		model = glm::mat4(1.0f);
+		normals = model;
+		mirrorShader.SetUniform4fv("model", glm::value_ptr(model));
+		mirrorShader.SetUniform3fv("normals", glm::value_ptr(normals));
+		mirrorShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
+		mirrorShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
 		quadVAO.Bind();
 		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -427,7 +448,7 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();	
 	}
-	//glDeleteFramebuffers(1, &framebuffer);
+	glDeleteFramebuffers(1, &framebuffer);
 	glfwTerminate();
 	return 0;
 }

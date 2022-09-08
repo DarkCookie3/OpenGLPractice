@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "Texture.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 

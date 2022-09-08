@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Texture.h"
 #include <iostream>
 #include "stb_image.h"
 
