@@ -116,14 +116,14 @@ int main()
 	};
 
 	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f, 0.0f, -2.0f),
+		glm::vec3(0.0f, 0.0f, -3.0f),
 		glm::vec3(2.0f, 5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-1.5f, -2.2f, -3.5f),
 		glm::vec3(-3.8f, -2.0f, -12.3f),
 		glm::vec3(2.4f, -0.4f, -3.5f),
 		glm::vec3(-1.7f, 3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f, 2.0f, -2.5f),
+		glm::vec3(1.3f, -2.0f, -3.5f),
+		glm::vec3(1.5f, 2.0f, -3.5f),
 		glm::vec3(1.5f, 0.2f, -1.5f),
 		glm::vec3(-2.3f, 1.0f, -3.5f)
 	};
@@ -149,10 +149,10 @@ int main()
 
 	std::vector<glm::vec3> vegetation;
 	vegetation.push_back(glm::vec3(-1.5f, 0.0f, -1.48f));
-	vegetation.push_back(glm::vec3(1.5f, 0.0f, -1.51f));
-	vegetation.push_back(glm::vec3(-2.0f, 0.0f, 1.7f));
-	vegetation.push_back(glm::vec3(-1.3f, 0.0f, -2.3f));
-	vegetation.push_back(glm::vec3(-4.5f, 0.0f, -1.6f));
+	vegetation.push_back(glm::vec3(1.5f, 0.0f, -2.51f));
+	vegetation.push_back(glm::vec3(-2.0f, 0.0f, -3.7f));
+	vegetation.push_back(glm::vec3(-1.3f, 0.0f, -4.3f));
+	vegetation.push_back(glm::vec3(-4.5f, 0.0f, -5.6f));
 
 	auto cubeVAO = VertexArray();
 	auto quadVAO = VertexArray();
@@ -245,7 +245,7 @@ int main()
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
 	
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 
@@ -292,8 +292,10 @@ int main()
 	
 		glm::vec3 camPos = mainCamera.GetPosition();
 		glm::vec3 camLook = mainCamera.GetLookDirection();
+		glm::vec3 camUp = mainCamera.GetUpVector();
 		mainCamera.SetPosition(glm::vec3(camPos.x, camPos.y, -camPos.z));
 		mainCamera.SetLookDirection(glm::vec3(camLook.x, camLook.y, -camLook.z));
+		mainCamera.SetUpVector(glm::vec3(camUp.x, camUp.y, -camUp.z));
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 		glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
@@ -420,12 +422,39 @@ int main()
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		}
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0); 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		mainCamera.SetPosition(camPos);
 		mainCamera.SetLookDirection(camLook);
+		mainCamera.SetUpVector(camUp);
+
+		glStencilMask(0x00);
+
+		mirrorShader.Bind();
+		model = glm::mat4(1.0f);
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0, 1, 0));
+		normals = glm::transpose(glm::inverse(model));
+		mirrorShader.SetUniform4fv("model", glm::value_ptr(model));
+		mirrorShader.SetUniform3fv("normals", glm::value_ptr(normals));
+		mirrorShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
+		mirrorShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
+		quadVAO.Bind();
+		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glStencilMask(0xFF);
+
+		lightShader.Bind();
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.01f));
+		lightShader.SetUniform4fv("model", glm::value_ptr(model));
+		lightShader.SetUniform3f("lightColor", 0.8f, 0.1f, 0.1f);
+		lightShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
+		lightShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
+		quadVAO.Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		lightShader.Bind();
 		lightShader.SetUniform4fv("model", glm::value_ptr(model));
@@ -519,6 +548,7 @@ int main()
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glEnable(GL_DEPTH_TEST);
 
+		sorted.clear();
 		for (unsigned int i = 0; i < vegetation.size(); i++)
 		{
 			float distance = glm::length(viewPos - vegetation[i]);
@@ -537,21 +567,7 @@ int main()
 			baseShader.SetUniform4fv("model", glm::value_ptr(model));
 			baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		}
-
-		mirrorShader.Bind();
-		model = glm::mat4(1.0f);
-		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0,1,0));
-		normals = glm::transpose(glm::inverse(model));
-		mirrorShader.SetUniform4fv("model", glm::value_ptr(model));
-		mirrorShader.SetUniform3fv("normals", glm::value_ptr(normals));
-		mirrorShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
-		mirrorShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
-		quadVAO.Bind();
-		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-		
+		}		
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();	

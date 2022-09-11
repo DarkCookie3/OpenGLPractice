@@ -22,13 +22,15 @@ void main()
 		);
 	float kernel[9] = float[](
 		1.0 / 16, 2.0 / 16, 1.0 / 16,
-		2.0 / 16, 4.0 / 16, 2.0 / 16,
+		2.0 / 16, 6.0 / 16, 2.0 / 16,
 		1.0 / 16, 2.0 / 16, 1.0 / 16
 		);
 	vec3 sampleTex[9];
 	for (int i = 0; i < 9; i++)
 	{
 		sampleTex[i] = vec3(texture(screenTexture, vec2(1.0f - gl_FragCoord.x/800, gl_FragCoord.y/600) + offsets[i]));
+		float average = (sampleTex[i].r * 0.2f + sampleTex[i].g * 0.7f + sampleTex[i].b * 0.1f) / 3.0f;
+		sampleTex[i] = vec3(average, average, average);
 	}
 	vec3 col = vec3(0.0);
 	for (int i = 0; i < 9; i++)

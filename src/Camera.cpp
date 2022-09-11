@@ -123,3 +123,8 @@ void Camera::SetLookDirection(glm::vec3 arg)
 {
 	LookNormalized = glm::normalize(arg);
 }
+
+void Camera::SetUpVector(glm::vec3 arg)
+{
+	CameraUpNormalized = arg;
+}

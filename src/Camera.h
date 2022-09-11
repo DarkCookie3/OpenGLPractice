@@ -22,10 +22,12 @@ public:
 	void ChangeZoom(float angleDelta);
 	void SetPosition(glm::vec3 arg);
 	void SetLookDirection(glm::vec3 arg);
+	void SetUpVector(glm::vec3 arg);
 
 	float GetFov() const { return fov; }
 	glm::vec3 GetPosition() const { return position; }
 	glm::vec3 GetLookDirection() const { return LookNormalized; }
+	glm::vec3 GetUpVector() const { return CameraUpNormalized; }
 private:
 	glm::vec3 position;
 
