@@ -83,7 +83,7 @@ void Camera::MoveByDash(const float& time, const bool& shifted)
 void Camera::MoveVertically(const float& time)
 {
 	float shiftedTime = time;
-	position += CameraUpNormalized * speed * shiftedTime;
+	position += YawRotationUp * speed * shiftedTime;
 }
 
 glm::mat4 Camera::generateProjectionMatrix(float aspect, float near, float far)

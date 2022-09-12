@@ -279,7 +279,6 @@ int main()
 		mainHandler.ProcessInput(window, glfwGetTime());
 
 		cubeVAO.Bind();
-
 		model = glm::mat4(1.0f);
 
 		glm::vec3 lightColor;
