@@ -40,6 +40,35 @@ void scrollWrapper(GLFWwindow* window, double x, double y)
 	mainHandler.scroll_callback(x, y);
 }
 
+unsigned int loadCubemap(std::vector<std::string> faces)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(0);
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char* data = stbi_load(("../OpenProject/Resources/Textures/skybox/" + faces[i]).c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	return textureID;
+}
+
 int main()
 {
 	glfwInit();
@@ -115,6 +144,51 @@ int main()
 		-0.5f, 0.5f, 0.5f,   0.0f, 1.0f, 0.0f,  0.0f, 0.0f // bottom-left
 	};
 
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3(2.0f, 5.0f, -15.0f),
@@ -156,17 +230,23 @@ int main()
 
 	auto cubeVAO = VertexArray();
 	auto quadVAO = VertexArray();
+	auto skyboxVAO = VertexArray();
 
 	auto VBO = VertexBuffer(vertices, sizeof(vertices));
 	auto quadVBO = VertexBuffer(quad, sizeof(quad));
+	auto skyboxVBO = VertexBuffer(skyboxVertices, sizeof(skyboxVertices));
 
 	auto layout = VertexBufferLayout();
 	layout.Push<float>(3);
 	layout.Push<float>(3);
 	layout.Push<float>(2);
 
+	auto positionsLayout = VertexBufferLayout();
+	positionsLayout.Push<float>(3);
+
 	cubeVAO.AddBuffer(VBO, layout);
 	quadVAO.AddBuffer(quadVBO, layout);
+	skyboxVAO.AddBuffer(skyboxVBO, positionsLayout);
 
 	quadVAO.Bind();
 	auto quadEBO = IndexBuffer(&quadIndices[0], sizeof(quadIndices) / sizeof(quadIndices[0]));
@@ -175,6 +255,7 @@ int main()
 	Shader baseShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/Fragment.shader");
 	Shader solidColorShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/SolidColorFragment.shader");
 	Shader screenShader("../OpenProject/Resources/Shaders/VertexFrame.shader", "../OpenProject/Resources/Shaders/FragmentFrame.shader");
+	Shader skyboxShader("../OpenProject/Resources/Shaders/VertexSkybox.shader", "../OpenProject/Resources/Shaders/FragmentSkybox.shader");
 
 	baseShader.Bind();
 	baseShader.SetUniform1f("material.shininess", 32.0f);
@@ -274,6 +355,17 @@ int main()
 	}	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	std::vector<std::string> faces
+	{
+		    "right.jpg",
+			"left.jpg",
+			"top.jpg",
+			"bottom.jpg",
+			"front.jpg",
+			"back.jpg"
+	};
+	unsigned int cubemapTexture = loadCubemap(faces);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		mainHandler.ProcessInput(window, glfwGetTime());
@@ -306,6 +398,16 @@ int main()
 		glStencilMask(0xFF);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 
+		glDepthMask(GL_FALSE);
+		skyboxShader.Bind();
+		skyboxShader.SetUniform4fv("view", glm::value_ptr(glm::mat4(glm::mat3(mainCamera.generateViewMatrix()))));
+		skyboxShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
+		skyboxVAO.Bind();
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDepthMask(GL_TRUE);
+
+		lightShader.Bind();
 		for (unsigned int i = 0; i < sizeof(pointLightPositions) / sizeof(pointLightPositions[0]); i++)
 		{
 			glm::mat4 lightT = glm::mat4(1.0f);

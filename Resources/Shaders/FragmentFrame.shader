@@ -21,16 +21,14 @@ void main()
 		vec2(offset, -offset) // bottom-right
 		);
 	float kernel[9] = float[](
-		1.5, 1.0, 1.5,
-		1.0, -9.5, 1.0,
-		1.5, 1.0, 1.5
+		0.0, 0.0, 0.0,
+		0.0, 1.0, 0.0,
+		0.0, 0.0, 0.0
 		);
 	vec3 sampleTex[9];
 	for (int i = 0; i < 9; i++)
 	{
 		sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
-		float average = (sampleTex[i].r + sampleTex[i].g + sampleTex[i].b) / 3.0;
-		sampleTex[i] = vec3(average, average, average);
 	}
 	vec3 col = vec3(0.0);
 	for (int i = 0; i < 9; i++)

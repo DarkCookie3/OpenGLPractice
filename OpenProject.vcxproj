@@ -127,10 +127,12 @@
   <ItemGroup>
     <None Include="Resources\Shaders\FragmentFrame.shader" />
     <None Include="Resources\Shaders\LightingFragment.shader" />
+    <None Include="Resources\Shaders\FragmentSkybox.shader" />
     <None Include="Resources\Shaders\SolidColorFragment.shader" />
     <None Include="Resources\Shaders\Vertex.shader" />
     <None Include="Resources\Shaders\Fragment.shader" />
     <None Include="Resources\Shaders\VertexFrame.shader" />
+    <None Include="Resources\Shaders\VertexSkybox.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
