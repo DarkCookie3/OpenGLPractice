@@ -257,50 +257,6 @@ int main()
 	Shader screenShader("../OpenProject/Resources/Shaders/VertexFrame.shader", "../OpenProject/Resources/Shaders/FragmentFrame.shader");
 	Shader skyboxShader("../OpenProject/Resources/Shaders/VertexSkybox.shader", "../OpenProject/Resources/Shaders/FragmentSkybox.shader");
 
-	baseShader.Bind();
-	baseShader.SetUniform1f("material.shininess", 32.0f);
-	baseShader.SetUniform3f("dirLights[0].direction", -0.2f, -1.0f, -0.3f);
-	baseShader.SetUniform3f("dirLights[0].ambient", 0.05f, 0.05f, 0.05f);
-	baseShader.SetUniform3f("dirLights[0].diffuse", 0.4f, 0.4f, 0.4f);
-	baseShader.SetUniform3f("dirLights[0].specular", 0.5f, 0.5f, 0.5f);
-	
-	baseShader.SetUniform3f("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-	baseShader.SetUniform3f("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-	baseShader.SetUniform3f("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-	baseShader.SetUniform1f("pointLights[0].constant", 1.0f);
-	baseShader.SetUniform1f("pointLights[0].linear", 0.09f);
-	baseShader.SetUniform1f("pointLights[0].quadratic", 0.032f);
-	
-	baseShader.SetUniform3f("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-	baseShader.SetUniform3f("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-	baseShader.SetUniform3f("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-	baseShader.SetUniform1f("pointLights[1].constant", 1.0f);
-	baseShader.SetUniform1f("pointLights[1].linear", 0.09f);
-	baseShader.SetUniform1f("pointLights[1].quadratic", 0.032f);
-	
-	baseShader.SetUniform3f("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-	baseShader.SetUniform3f("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-	baseShader.SetUniform3f("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-	baseShader.SetUniform1f("pointLights[2].constant", 1.0f);
-	baseShader.SetUniform1f("pointLights[2].linear", 0.09f);
-	baseShader.SetUniform1f("pointLights[2].quadratic", 0.032f);
-	
-	baseShader.SetUniform3f("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-	baseShader.SetUniform3f("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-	baseShader.SetUniform3f("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-	baseShader.SetUniform1f("pointLights[3].constant", 1.0f);
-	baseShader.SetUniform1f("pointLights[3].linear", 0.09f);
-	baseShader.SetUniform1f("pointLights[3].quadratic", 0.032f);
-	
-	baseShader.SetUniform3f("spotLights[0].ambient", 0.0f, 0.0f, 0.0f);
-	baseShader.SetUniform3f("spotLights[0].diffuse", 1.0f, 1.0f, 1.0f);
-	baseShader.SetUniform3f("spotLights[0].specular", 1.0f, 1.0f, 1.0f);
-	baseShader.SetUniform1f("spotLights[0].constant", 1.0f);
-	baseShader.SetUniform1f("spotLights[0].linear", 0.09f);
-	baseShader.SetUniform1f("spotLights[0].quadratic", 0.032f);
-	baseShader.SetUniform1f("spotLights[0].cutOff", glm::cos(glm::radians(12.5f)));
-	baseShader.SetUniform1f("spotLights[0].cutOffOuter", glm::cos(glm::radians(15.0f)));
-
 	glm::mat4 model = glm::mat4(1.0f);
 
 	glm::mat3 normals = glm::mat3(1.0f);
@@ -319,7 +275,7 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
+	glDepthFunc(GL_LEQUAL);
 
 	glEnable(GL_STENCIL_TEST);
 	glStencilMask(0xFF);
@@ -398,14 +354,13 @@ int main()
 		glStencilMask(0xFF);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 
-		glDepthMask(GL_FALSE);
 		skyboxShader.Bind();
 		skyboxShader.SetUniform4fv("view", glm::value_ptr(glm::mat4(glm::mat3(mainCamera.generateViewMatrix()))));
 		skyboxShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
 		skyboxVAO.Bind();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glDepthMask(GL_TRUE);
+
 
 		lightShader.Bind();
 		for (unsigned int i = 0; i < sizeof(pointLightPositions) / sizeof(pointLightPositions[0]); i++)
@@ -438,18 +393,6 @@ int main()
 		baseShader.SetUniform4fv("view", glm::value_ptr(mainCamera.generateViewMatrix()));
 		baseShader.SetUniform4fv("projection", glm::value_ptr(mainCamera.generateProjectionMatrix(800.0f / 600.0f, 0.1f, 100.0f)));
 
-		// point light 1
-		baseShader.SetUniform3f("pointLights[0].position", pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-		// point light 2
-		baseShader.SetUniform3f("pointLights[1].position", pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-		// point light 3
-		baseShader.SetUniform3f("pointLights[2].position", pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-		// point light 4
-		baseShader.SetUniform3f("pointLights[3].position", pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
-		// spotLight
-		baseShader.SetUniform3f("spotLights[0].position", viewPos.x, viewPos.y, viewPos.z);
-		baseShader.SetUniform3f("spotLights[0].direction", lookDir.x, lookDir.y, lookDir.z);
-
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(1.0f, 2.0f, -12.0f));
 		normals = glm::transpose(glm::inverse(model));
@@ -458,8 +401,7 @@ int main()
 		backpack.Draw(baseShader);
 
 		cubeVAO.Bind();
-		crate.Bind(0);
-		crateSpec.Bind(1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); i++)
 		{
 			glm::mat4 trans = glm::mat4(1.0f);
@@ -469,7 +411,6 @@ int main()
 			normals = glm::transpose(glm::inverse(trans));
 			baseShader.SetUniform4fv("model", glm::value_ptr(trans));
 			baseShader.SetUniform3fv("normals", glm::value_ptr(normals));
-			glm::vec4 test = glm::vec4(vegetation[3], 1.0) * model;
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
@@ -504,7 +445,6 @@ int main()
 		quadVAO.Bind();
 		baseShader.Bind();
 		vegetationTexture.Bind(0);
-		baseShader.SetUniform1i("material.texture_specular1", 0);
 		for (std::map<float, glm::vec3>::reverse_iterator i = sorted.rbegin(); i != sorted.rend(); i++)
 		{
 			model = glm::mat4(1.0f);
