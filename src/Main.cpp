@@ -49,7 +49,7 @@ unsigned int loadCubemap(std::vector<std::string> faces)
 	stbi_set_flip_vertically_on_load(0);
 	for (unsigned int i = 0; i < faces.size(); i++)
 	{
-		unsigned char* data = stbi_load(("../OpenProject/Resources/Textures/skybox/" + faces[i]).c_str(), &width, &height, &nrChannels, 0);
+		unsigned char* data = stbi_load(("../../Resources/Textures/skybox/" + faces[i]).c_str(), &width, &height, &nrChannels, 0);
 		if (data)
 		{
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -97,7 +97,7 @@ int main()
 	glfwSetCursorPosCallback(window, mouseWrapper);
 	glfwSetScrollCallback(window, scrollWrapper);
 	
-	Model backpack("E:/OpenGLPractice/OpenProject/Resources/Models/Backpack/backpack.obj");
+	Model backpack("../../Resources/Models/Backpack/backpack.obj");
 	
 	float vertices[] = {
 		// back face
@@ -252,10 +252,10 @@ int main()
 	auto quadEBO = IndexBuffer(&quadIndices[0], sizeof(quadIndices) / sizeof(quadIndices[0]));
 	quadEBO.Bind();
 
-	Shader baseShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/Fragment.shader");
-	Shader solidColorShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/SolidColorFragment.shader");
-	Shader screenShader("../OpenProject/Resources/Shaders/VertexFrame.shader", "../OpenProject/Resources/Shaders/FragmentFrame.shader");
-	Shader skyboxShader("../OpenProject/Resources/Shaders/VertexSkybox.shader", "../OpenProject/Resources/Shaders/FragmentSkybox.shader");
+	Shader baseShader("../../Resources/Shaders/Vertex.shader", "../../Resources/Shaders/Fragment.shader");
+	Shader solidColorShader("../../Resources/Shaders/Vertex.shader", "../../Resources/Shaders/SolidColorFragment.shader");
+	Shader screenShader("../../Resources/Shaders/VertexFrame.shader", "../../Resources/Shaders/FragmentFrame.shader");
+	Shader skyboxShader("../../Resources/Shaders/VertexSkybox.shader", "../../Resources/Shaders/FragmentSkybox.shader");
 
 	baseShader.Bind();
 	baseShader.SetUniform1f("material.shininess", 32.0f);
@@ -308,12 +308,12 @@ int main()
 	glm::vec3 viewPos = glm::vec3(1.0f);
 	glm::vec3 lookDir = glm::vec3(1.0f);
 
-	Shader lightShader("../OpenProject/Resources/Shaders/Vertex.shader", "../OpenProject/Resources/Shaders/LightingFragment.shader");
+	Shader lightShader("../../Resources/Shaders/Vertex.shader", "../../Resources/Shaders/LightingFragment.shader");
 	
-	Texture crate("../OpenProject/Resources/Textures/Crate.jpg", TextureType::diffuse);
-	Texture crateSpec("../OpenProject/Resources/Textures/CrateSpecular.jpg", TextureType::specular);
+	Texture crate("../../Resources/Textures/Crate.jpg", TextureType::diffuse);
+	Texture crateSpec("../../Resources/Textures/CrateSpecular.jpg", TextureType::specular);
 
-	Texture vegetationTexture("../OpenProject/Resources/Textures/VegetationBlue.png", TextureType::diffuse);
+	Texture vegetationTexture("../../Resources/Textures/VegetationBlue.png", TextureType::diffuse);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
